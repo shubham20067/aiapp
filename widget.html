@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI Chat Widget</title>
+
+<style>
+#chatbox {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    font-family: Arial, sans-serif;
+}
+
+#chat-header {
+    background: #4f46e5;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#chat-body {
+    display: none;
+    background: white;
+    border: 1px solid #ccc;
+    height: 350px;
+    padding: 10px;
+}
+
+#messages {
+    height: 250px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="chatbox">
+    <div id="chat-header" onclick="toggleChat()">Chat with us 💬</div>
+    <div id="chat-body">
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Ask a question..." onkeydown="sendMessage(event)">
+    </div>
+</div>
+
+<script>
+const STORE_INFO = `
+We sell wireless Bluetooth headphones.
+Price: $59
+Free shipping
+7-day return policy
+Battery life: 20 hours
+Sweat-resistant
+`;
+
+function toggleChat() {
+    const body = document.getElementById("chat-body");
+    body.style.display = body.style.display === "none" ? "block" : "none";
+}
+
+function sendMessage(e) {
+    if (e.key !== "Enter") return;
+
+    const input = document.getElementById("userInput");
+    const msg = input.value;
+    input.value = "";
+
+    addMessage("You", msg);
+
+    fetch("http://127.0.0.1:5000/widget-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            store_info: STORE_INFO,
+            question: msg
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        addMessage("AI", data.answer);
+    });
+}
+
+function addMessage(sender, text) {
+    const messages = document.getElementById("messages");
+    messages.innerHTML += `<p><strong>${sender}:</strong> ${text}</p>`;
+    messages.scrollTop = messages.scrollHeight;
+}
+</script>
+
+</body>
+</html>
