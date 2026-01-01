@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Store Assistant</title>
+<style>
+body { font-family: Arial; background: #f4f6f8; }
+.container { max-width: 900px; margin: auto; padding: 20px; }
+.card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+input, textarea, select { width: 100%; padding: 10px; margin-top: 10px; }
+button { padding: 10px; background: #4f46e5; color: white; border: none; margin-top: 10px; }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>🛒 AI Store Assistant (Database Enabled)</h2>
+
+<div class="card">
+<form method="POST">
+
+<label>Store Name</label>
+<input name="store_name" placeholder="Example: My Headphone Store" required>
+
+<label>Store Information (saved once)</label>
+<textarea name="store_info" rows="5" placeholder="Product details, price, shipping, return policy"></textarea>
+
+<label>Customer Question</label>
+<input name="question" placeholder="Is this good for gym?" required>
+
+<button type="submit">Ask AI</button>
+
+</form>
+</div>
+
+{% if answer %}
+<div class="card">
+<h3>AI Answer</h3>
+<p>{{ answer }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+<h3>Saved Stores</h3>
+<ul>
+{% for store in stores %}
+<li>{{ store.name }}</li>
+{% endfor %}
+</ul>
+</div>
+
+</div>
+</body>
+</html>
